@@ -5,7 +5,7 @@ Gem::Specification.new do |gem|
   gem.version     = Mutiny::Rails::VERSION
   gem.date        = Date.today.to_s
 
-  gem.summary     = 'Mutiny within Rails 3.1'
+  gem.summary     = 'Mutiny within Rails 3.1+'
   gem.description = 'This gem provides the official release of Mutiny from http://github.com/enova/mutiny'
 
   gem.authors     = ['Benjamin Feng']
