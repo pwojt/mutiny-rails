@@ -1,4 +1,4 @@
-/*! Mutiny v0.3.0 - http://mutinyjs.com/ */
+/*! Mutiny v0.3.1 - http://mutinyjs.com/ */
 (function(window, undefined) {
 $(function(){
   if(Mutiny.options.initOnReady) {
@@ -215,45 +215,58 @@ Mutiny.widgets.slider = {
   }
 };
 
+function toggleFunc($e, style, classes){
+  if($e.length === 0){
+    return function(){};
+  } else if(style) {
+    var noStyle = {};
+    for(var key in style) {
+      noStyle[key] = $e.css(key);
+    }
+    return function(on) {
+      $e.css(on ? style : noStyle);
+    };
+  } else {
+    classes = classes.split(' ');
+    return function(on) {
+      $e.toggleClass(classes[0], !on);
+      $e.toggleClass(classes[1], on);
+    };
+  }
+}
+
 Mutiny.widgets.toggler = {
   'defaults': {'classes': 'inactive active', 'preventDefault': false},
   'stringArg': 'target',
   'init': function($instigator, options){
     var $target = $(options.target);
 
-    var toggleFunc;
-    if(options.style) {
-      var noStyle = {};
-      for(var key in options.style) {
-        noStyle[key] = $instigator.css(key);
-      }
-
-      toggleFunc = function(on) {
-        $instigator.css(on ? options.style : noStyle);
-        $target.css(on ? options.style : noStyle);
-      };
-    } else {
-      var classes = options.classes.split(' ');
-      toggleFunc = function(on) {
-        $instigator.toggleClass(classes[0], !on);
-        $instigator.toggleClass(classes[1], on);
-        $target.toggleClass(classes[0], !on);
-        $target.toggleClass(classes[1], on);
-      };
-    }
+    var instigatorFunc = toggleFunc($instigator, options.style, options.classes);
+    var targetFunc = toggleFunc($target, options.targetStyle, options.targetClasses || options.classes);
 
     if($instigator.is('input[type=radio]')) {
       var name = $instigator.attr("name");
-      toggleFunc($instigator.is(':checked'));
+      instigatorFunc($instigator.is(':checked'));
+      targetFunc($instigator.is(':checked'));
       $(format('input[name="{0}"]', name)).change(function(event){
-        toggleFunc($instigator.is(':checked'));
+        instigatorFunc($instigator.is(':checked'));
+        targetFunc($instigator.is(':checked'));
+      });
+    } else if($instigator.is('input[type=checkbox]')) {
+      instigatorFunc($instigator.is(':checked'));
+      targetFunc($instigator.is(':checked'));
+      $instigator.change(function(event){
+        instigatorFunc($instigator.is(':checked'));
+        targetFunc($instigator.is(':checked'));
       });
     } else {
       var active = false;
-      toggleFunc(active);
+      instigatorFunc(active);
+      targetFunc(active);
       $instigator.click(function(event) {
         active = !active;
-        toggleFunc(active);
+        instigatorFunc(active);
+        targetFunc(active);
 
         if(options.preventDefault) {
           event.preventDefault();
