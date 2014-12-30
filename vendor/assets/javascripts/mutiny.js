@@ -23,7 +23,7 @@ var Mutiny = window.Mutiny = {
       if(isString(directives)) {
         /* data-mutiny='slider' */
         initWidget($e, directives, {});
-      } else if(typeof data === 'object') {
+      } else if(typeof directives === 'object') {
         /* data-mutiny='{"slider": {"some": "options"}}' */
         for(var directive in directives) {
           initWidget($e, directive, directives[directive]);
