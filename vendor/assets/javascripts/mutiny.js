@@ -1,4 +1,4 @@
-/*! Mutiny v0.3.1 - http://mutinyjs.com/ */
+/*! Mutiny v0.3.2 - http://mutinyjs.com/ */
 (function(window, undefined) {
 $(function(){
   if(Mutiny.options.initOnReady) {
